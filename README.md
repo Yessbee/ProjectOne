@@ -5,6 +5,8 @@ This project implements a high-performance, non-blocking pattern for exporting l
 ## 🚀 High-Level Architecture
 The system uses an **Asynchronous Request-Reply Pattern**. The database acts as a state coordinator, allowing the backend to work in a separate thread while the frontend polls for updates.
 
+### Sequence Diagram
+```mermaid
 sequenceDiagram
     autonumber
     participant React as React Frontend
@@ -37,6 +39,7 @@ sequenceDiagram
     DB_Bin-->>API: Binary Payload
     API-->>React: Stream Byte Array (Content-Disposition: attachment)
     React->>React: Browser Triggers File Save
+```
 
 ---
 
@@ -72,4 +75,3 @@ The frontend handles asynchronous state transitions to provide a smooth, non-blo
     * If `STATUS === 'COMPLETED'`, the app clears the interval and triggers the binary download endpoint.
     * If `STATUS === 'FAILED'`, it displays the error message captured in the database record.
 * **Safety**: The polling logic includes a timestamp check against `UPDATED_ON` to detect "ghost" processes that may have crashed on the server, allowing for a "Retry" option.
-
