@@ -5,8 +5,6 @@ This project implements a high-performance, non-blocking pattern for exporting l
 ## 🚀 High-Level Architecture
 The system uses an **Asynchronous Request-Reply Pattern**. The database acts as a state coordinator, allowing the backend to work in a separate thread while the frontend polls for updates.
 
-### Sequence Diagram
-```mermaid
 sequenceDiagram
     autonumber
     participant React as React Frontend
@@ -21,7 +19,7 @@ sequenceDiagram
     API-->>React: 202 Accepted (Return exportId)
     
     Note over React, DB_Bin: Phase 2: Background Processing (~5 mins)
-    API-)Async: Kick off @Async thread
+    API->>Async: Trigger @Async thread
     Async->>Async: Generate Excel via SXSSF (Apache POI)
     Async->>DB_Bin: UPDATE Row: Set BLOB, FileName & Status 'COMPLETED'
     
@@ -39,7 +37,6 @@ sequenceDiagram
     DB_Bin-->>API: Binary Payload
     API-->>React: Stream Byte Array (Content-Disposition: attachment)
     React->>React: Browser Triggers File Save
-```
 
 ---
 
